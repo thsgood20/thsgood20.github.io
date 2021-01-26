@@ -28,7 +28,7 @@ twitter:
 
 social:
   name: LKK                  # it will shows as the copyright owner in Footer
-  email: 394207192@qq.com             # change to your email address
+  email:              # change to your email address
   links:
     # The first element serves as the copyright owner's link
     - https://twitter.com/username      # change to your twitter homepage
