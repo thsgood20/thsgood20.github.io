@@ -2,9 +2,9 @@
 
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>https://thsgood20.github.io</id>
-  <title>L.KK</title>
-  <subtitle>NSObject,IOS,Developer.</subtitle>
-  <updated>2021-01-26T13:38:21+08:00</updated>
+  <title>LKK</title>
+  <subtitle>NSObject, IOS, Developer.</subtitle>
+  <updated>2021-01-26T14:33:58+08:00</updated>
   <author>
     <name>thsgood20</name>
     <uri>https://thsgood20.github.io</uri>
@@ -23,7 +23,7 @@
     <link href="https://thsgood20.github.io/posts/alloc%E5%AE%9E%E7%8E%B0/" rel="alternate" type="text/html" title="NSObject alloc实现" />
     <published>2021-01-25T20:45:45+08:00</published>
   
-    <updated>2021-01-25T20:45:45+08:00</updated>
+    <updated>2021-01-26T14:22:31+08:00</updated>
   
     <id>https://thsgood20.github.io/posts/alloc%E5%AE%9E%E7%8E%B0/</id>
     <content src="https://thsgood20.github.io/posts/alloc%E5%AE%9E%E7%8E%B0/" />
@@ -57,16 +57,19 @@
 
     alloc简化版,引用计数信息写入对象内存头部
 
-    struct obj_layout{
-NSUinteger retained;
-};
-+(id)alloc{
-int size = sizeof(stuct obj_layout)+对象大小
-struct obj_layout *p = (struct obj_layout*) calloc(1,size);
-return(id)(p+1);
-}
--(void)release{
-if(decrementeExtraRefCountWasZer...
+    
+ struct obj_layout{
+     NSUinteger retained;
+ };
+
+ +(id)alloc{
+     int size = sizeof(stuct obj_layout)+对象大小
+     struct obj_layout *p = (struct obj_layout*) calloc(1,size);
+     return(id)(p+1);
+ }
+
+ -(void)release{
+    ...
     </summary>
   
 

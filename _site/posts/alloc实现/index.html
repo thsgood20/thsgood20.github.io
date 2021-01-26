@@ -28,7 +28,7 @@
 <meta property="og:description" content="有两种alloc实现" />
 <link rel="canonical" href="https://thsgood20.github.io/posts/alloc%E5%AE%9E%E7%8E%B0/" />
 <meta property="og:url" content="https://thsgood20.github.io/posts/alloc%E5%AE%9E%E7%8E%B0/" />
-<meta property="og:site_name" content="L.KK" />
+<meta property="og:site_name" content="LKK" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2021-01-25T20:45:45+08:00" />
 <meta name="twitter:card" content="summary" />
@@ -37,11 +37,11 @@
 <meta name="twitter:creator" content="@thsgood20" />
 <meta name="google-site-verification" content="google_meta_tag_verification" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"https://thsgood20.github.io/posts/alloc%E5%AE%9E%E7%8E%B0/"},"url":"https://thsgood20.github.io/posts/alloc%E5%AE%9E%E7%8E%B0/","headline":"NSObject alloc实现","dateModified":"2021-01-25T20:45:45+08:00","datePublished":"2021-01-25T20:45:45+08:00","author":{"@type":"Person","name":"thsgood20"},"description":"有两种alloc实现","@type":"BlogPosting","@context":"https://schema.org"}</script>
+{"url":"https://thsgood20.github.io/posts/alloc%E5%AE%9E%E7%8E%B0/","headline":"NSObject alloc实现","dateModified":"2021-01-26T14:22:31+08:00","datePublished":"2021-01-25T20:45:45+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://thsgood20.github.io/posts/alloc%E5%AE%9E%E7%8E%B0/"},"author":{"@type":"Person","name":"thsgood20"},"description":"有两种alloc实现","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
-  <title>NSObject alloc实现 | L.KK
+  <title>NSObject alloc实现 | LKK
   </title>
 
   <!--
@@ -178,7 +178,7 @@
     </div>
 
     <div class="site-title mt-3">
-      <a href="/">L.KK</a>
+      <a href="/">LKK</a>
     </div>
 
     <div class="site-subtitle font-italic">记录</div>
@@ -558,6 +558,35 @@
         <div>
           <!-- lastmod -->
           
+          <span>
+            Updated
+            <!--
+  Date format snippet
+
+  v2.4.1
+  https://github.com/cotes2020/jekyll-theme-chirpy
+  © 2020 Cotes Chung
+  MIT License
+-->
+<span class="timeago lastmod"
+  
+    data-toggle="tooltip"
+    data-placement="bottom"
+    title="Tue, Jan 26, 2021,  2:22 PM +0800"
+  >
+
+  
+  
+
+  
+    Jan 26
+  
+
+  <i class="unloaded">2021-01-26T14:22:31+08:00</i>
+
+</span>
+          </span>
+          
 
           <!-- read time -->
           <!--
@@ -570,7 +599,7 @@
 
 
 <!-- return element -->
-<span class="readtime" data-toggle="tooltip" data-placement="bottom" title="577 words">3 min</span>
+<span class="readtime" data-toggle="tooltip" data-placement="bottom" title="587 words">3 min</span>
 
 
           <!-- page views -->
@@ -610,25 +639,36 @@
 14
 15
 16
-</pre></td><td class="rouge-code"><pre><span class="k">struct</span> <span class="n">obj_layout</span><span class="p">{</span>
-<span class="n">NSUinteger</span> <span class="n">retained</span><span class="p">;</span>
-<span class="p">};</span>
-<span class="o">+</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">alloc</span><span class="p">{</span>
-<span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">stuct</span> <span class="n">obj_layout</span><span class="p">)</span><span class="o">+</span><span class="err">对象大小</span>
-<span class="k">struct</span> <span class="n">obj_layout</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="k">struct</span> <span class="n">obj_layout</span><span class="o">*</span><span class="p">)</span> <span class="n">calloc</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">size</span><span class="p">);</span>
-<span class="k">return</span><span class="p">(</span><span class="n">id</span><span class="p">)(</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
-<span class="p">}</span>
-<span class="o">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">release</span><span class="p">{</span>
-<span class="k">if</span><span class="p">(</span><span class="n">decrementeExtraRefCountWasZero</span><span class="p">(</span><span class="n">self</span><span class="p">))</span>
-    <span class="p">[</span><span class="n">self</span> <span class="n">dealloc</span><span class="p">];</span>
-<span class="p">}</span>
-<span class="o">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">dealloc</span><span class="p">{</span>
-<span class="k">struct</span> <span class="n">obj_layout</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="o">&amp;</span> <span class="p">((</span><span class="k">struct</span> <span class="n">obj_layout</span> <span class="o">*</span><span class="p">)</span><span class="n">self</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span>
-<span class="n">free</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
-<span class="p">}</span>
+17
+18
+19
+20
+21
+</pre></td><td class="rouge-code"><pre>
+ <span class="k">struct</span> <span class="n">obj_layout</span><span class="p">{</span>
+     <span class="n">NSUinteger</span> <span class="n">retained</span><span class="p">;</span>
+ <span class="p">};</span>
+
+ <span class="o">+</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">alloc</span><span class="p">{</span>
+     <span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">stuct</span> <span class="n">obj_layout</span><span class="p">)</span><span class="o">+</span><span class="err">对象大小</span>
+     <span class="k">struct</span> <span class="n">obj_layout</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="k">struct</span> <span class="n">obj_layout</span><span class="o">*</span><span class="p">)</span> <span class="n">calloc</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">size</span><span class="p">);</span>
+     <span class="k">return</span><span class="p">(</span><span class="n">id</span><span class="p">)(</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+ <span class="p">}</span>
+
+ <span class="o">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">release</span><span class="p">{</span>
+     <span class="k">if</span><span class="p">(</span><span class="n">decrementeExtraRefCountWasZero</span><span class="p">(</span><span class="n">self</span><span class="p">))</span>
+     <span class="p">[</span><span class="n">self</span> <span class="n">dealloc</span><span class="p">];</span>
+ <span class="p">}</span>
+
+ <span class="o">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">dealloc</span><span class="p">{</span>
+     <span class="k">struct</span> <span class="n">obj_layout</span><span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="o">&amp;</span> <span class="p">((</span><span class="k">struct</span> <span class="n">obj_layout</span> <span class="o">*</span><span class="p">)</span><span class="n">self</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span>
+     <span class="n">free</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+ <span class="p">}</span>
+
 </pre></td></tr></tbody></table></code></div>    </div>
+
     <p>Q:当retained变量超出最大值时会发生什么? 
-A:retain方法会抛出异常</p>
+ A:retain方法会抛出异常</p>
   </li>
   <li>
     <p>Apple实现</p>
@@ -668,45 +708,55 @@ A:retain方法会抛出异常</p>
 33
 34
 35
-</pre></td><td class="rouge-code"><pre>  <span class="k">static</span> <span class="k">struct</span> <span class="p">{</span>
+36
+37
+38
+39
+40
+</pre></td><td class="rouge-code"><pre>    
+ <span class="k">static</span> <span class="k">struct</span> <span class="p">{</span>
  <span class="n">CFSpinLock_t</span> <span class="n">lock</span><span class="p">;</span>
  <span class="n">CFBasicHashRef</span> <span class="n">table</span><span class="p">;</span>
  <span class="kt">uint8_t</span> <span class="n">padding</span><span class="p">[</span><span class="mi">64</span> <span class="o">-</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">CFBasicHashRef</span><span class="p">)</span> <span class="o">-</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">CFSpinLock_t</span><span class="p">)];</span>
-<span class="p">}</span> <span class="n">__NSRetainCounters</span><span class="p">[</span><span class="n">NUM_EXTERN_TABLES</span><span class="p">];</span>
-<span class="n">CF_EXPORT</span> <span class="kt">uintptr_t</span> <span class="nf">__CFDoExternRefOperation</span><span class="p">(</span><span class="kt">uintptr_t</span> <span class="n">op</span><span class="p">,</span> <span class="n">id</span> <span class="n">obj</span><span class="p">)</span> <span class="p">{</span>
- <span class="k">if</span> <span class="p">(</span><span class="n">nil</span> <span class="o">==</span> <span class="n">obj</span><span class="p">)</span> <span class="n">HALT</span><span class="p">;</span>
- <span class="kt">uintptr_t</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">EXTERN_TABLE_IDX</span><span class="p">(</span><span class="n">obj</span><span class="p">);</span>
- <span class="kt">uintptr_t</span> <span class="n">disguised</span> <span class="o">=</span> <span class="n">DISGUISE</span><span class="p">(</span><span class="n">obj</span><span class="p">);</span>
- <span class="n">CFSpinLock_t</span> <span class="o">*</span><span class="n">lock</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">__NSRetainCounters</span><span class="p">[</span><span class="n">idx</span><span class="p">].</span><span class="n">lock</span><span class="p">;</span>
- <span class="n">CFBasicHashRef</span> <span class="n">table</span> <span class="o">=</span> <span class="n">__NSRetainCounters</span><span class="p">[</span><span class="n">idx</span><span class="p">].</span><span class="n">table</span><span class="p">;</span>
- <span class="kt">uintptr_t</span> <span class="n">count</span><span class="p">;</span>
- <span class="k">switch</span> <span class="p">(</span><span class="n">op</span><span class="p">)</span> <span class="p">{</span>
- <span class="k">case</span> <span class="mi">300</span><span class="p">:</span>   <span class="c1">// increment</span>
- <span class="k">case</span> <span class="mi">350</span><span class="p">:</span>   <span class="c1">// increment, no event</span>
-     <span class="n">__CFSpinLock</span><span class="p">(</span><span class="n">lock</span><span class="p">);</span>
- <span class="n">CFBasicHashAddValue</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">disguised</span><span class="p">,</span> <span class="n">disguised</span><span class="p">);</span>
-     <span class="n">__CFSpinUnlock</span><span class="p">(</span><span class="n">lock</span><span class="p">);</span>
-     <span class="k">if</span> <span class="p">(</span><span class="n">__CFOASafe</span> <span class="o">&amp;&amp;</span> <span class="n">op</span> <span class="o">!=</span> <span class="mi">350</span><span class="p">)</span> <span class="n">__CFRecordAllocationEvent</span><span class="p">(</span><span class="n">__kCFObjectRetainedEvent</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
-     <span class="k">return</span> <span class="p">(</span><span class="kt">uintptr_t</span><span class="p">)</span><span class="n">obj</span><span class="p">;</span>
- <span class="k">case</span> <span class="mi">400</span><span class="p">:</span>   <span class="c1">// decrement</span>
-     <span class="k">if</span> <span class="p">(</span><span class="n">__CFOASafe</span><span class="p">)</span> <span class="n">__CFRecordAllocationEvent</span><span class="p">(</span><span class="n">__kCFObjectReleasedEvent</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
- <span class="k">case</span> <span class="mi">450</span><span class="p">:</span>   <span class="c1">// decrement, no event</span>
-     <span class="n">__CFSpinLock</span><span class="p">(</span><span class="n">lock</span><span class="p">);</span>
-     <span class="n">count</span> <span class="o">=</span> <span class="p">(</span><span class="kt">uintptr_t</span><span class="p">)</span><span class="n">CFBasicHashRemoveValue</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">disguised</span><span class="p">);</span>
-     <span class="n">__CFSpinUnlock</span><span class="p">(</span><span class="n">lock</span><span class="p">);</span>
-     <span class="k">return</span> <span class="mi">0</span> <span class="o">==</span> <span class="n">count</span><span class="p">;</span>
- <span class="k">case</span> <span class="mi">500</span><span class="p">:</span>
-     <span class="n">__CFSpinLock</span><span class="p">(</span><span class="n">lock</span><span class="p">);</span>
-     <span class="n">count</span> <span class="o">=</span> <span class="p">(</span><span class="kt">uintptr_t</span><span class="p">)</span><span class="n">CFBasicHashGetCountOfKey</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">disguised</span><span class="p">);</span>
-     <span class="n">__CFSpinUnlock</span><span class="p">(</span><span class="n">lock</span><span class="p">);</span>
-     <span class="k">return</span> <span class="n">count</span><span class="p">;</span>
+
+ <span class="p">}</span> <span class="n">__NSRetainCounters</span><span class="p">[</span><span class="n">NUM_EXTERN_TABLES</span><span class="p">];</span>
+
+ <span class="n">CF_EXPORT</span> <span class="kt">uintptr_t</span> <span class="nf">__CFDoExternRefOperation</span><span class="p">(</span><span class="kt">uintptr_t</span> <span class="n">op</span><span class="p">,</span> <span class="n">id</span> <span class="n">obj</span><span class="p">)</span> <span class="p">{</span>
+     <span class="k">if</span> <span class="p">(</span><span class="n">nil</span> <span class="o">==</span> <span class="n">obj</span><span class="p">)</span> <span class="n">HALT</span><span class="p">;</span>
+     <span class="kt">uintptr_t</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">EXTERN_TABLE_IDX</span><span class="p">(</span><span class="n">obj</span><span class="p">);</span>
+     <span class="kt">uintptr_t</span> <span class="n">disguised</span> <span class="o">=</span> <span class="n">DISGUISE</span><span class="p">(</span><span class="n">obj</span><span class="p">);</span>
+     <span class="n">CFSpinLock_t</span> <span class="o">*</span><span class="n">lock</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">__NSRetainCounters</span><span class="p">[</span><span class="n">idx</span><span class="p">].</span><span class="n">lock</span><span class="p">;</span>
+     <span class="n">CFBasicHashRef</span> <span class="n">table</span> <span class="o">=</span> <span class="n">__NSRetainCounters</span><span class="p">[</span><span class="n">idx</span><span class="p">].</span><span class="n">table</span><span class="p">;</span>
+     <span class="kt">uintptr_t</span> <span class="n">count</span><span class="p">;</span>
+     <span class="k">switch</span> <span class="p">(</span><span class="n">op</span><span class="p">)</span> <span class="p">{</span>
+         <span class="k">case</span> <span class="mi">300</span><span class="p">:</span>   <span class="c1">// increment</span>
+         <span class="k">case</span> <span class="mi">350</span><span class="p">:</span>   <span class="c1">// increment, no event</span>
+             <span class="n">__CFSpinLock</span><span class="p">(</span><span class="n">lock</span><span class="p">);</span>
+             <span class="n">CFBasicHashAddValue</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">disguised</span><span class="p">,</span> <span class="n">disguised</span><span class="p">);</span>
+             <span class="n">__CFSpinUnlock</span><span class="p">(</span><span class="n">lock</span><span class="p">);</span>
+             <span class="k">if</span> <span class="p">(</span><span class="n">__CFOASafe</span> <span class="o">&amp;&amp;</span> <span class="n">op</span> <span class="o">!=</span> <span class="mi">350</span><span class="p">)</span> <span class="n">__CFRecordAllocationEvent</span><span class="p">(</span><span class="n">__kCFObjectRetainedEvent</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+             <span class="k">return</span> <span class="p">(</span><span class="kt">uintptr_t</span><span class="p">)</span><span class="n">obj</span><span class="p">;</span>
+     <span class="k">case</span> <span class="mi">400</span><span class="p">:</span>   <span class="c1">// decrement</span>
+         <span class="k">if</span> <span class="p">(</span><span class="n">__CFOASafe</span><span class="p">)</span> <span class="n">__CFRecordAllocationEvent</span><span class="p">(</span><span class="n">__kCFObjectReleasedEvent</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+     <span class="k">case</span> <span class="mi">450</span><span class="p">:</span>   <span class="c1">// decrement, no event</span>
+         <span class="n">__CFSpinLock</span><span class="p">(</span><span class="n">lock</span><span class="p">);</span>
+         <span class="n">count</span> <span class="o">=</span> <span class="p">(</span><span class="kt">uintptr_t</span><span class="p">)</span><span class="n">CFBasicHashRemoveValue</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">disguised</span><span class="p">);</span>
+         <span class="n">__CFSpinUnlock</span><span class="p">(</span><span class="n">lock</span><span class="p">);</span>
+         <span class="k">return</span> <span class="mi">0</span> <span class="o">==</span> <span class="n">count</span><span class="p">;</span>
+     <span class="k">case</span> <span class="mi">500</span><span class="p">:</span>
+         <span class="n">__CFSpinLock</span><span class="p">(</span><span class="n">lock</span><span class="p">);</span>
+         <span class="n">count</span> <span class="o">=</span> <span class="p">(</span><span class="kt">uintptr_t</span><span class="p">)</span><span class="n">CFBasicHashGetCountOfKey</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">disguised</span><span class="p">);</span>
+         <span class="n">__CFSpinUnlock</span><span class="p">(</span><span class="n">lock</span><span class="p">);</span>
+         <span class="k">return</span> <span class="n">count</span><span class="p">;</span>
+     <span class="p">}</span>
+     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+
  <span class="p">}</span>
- <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
+
 </pre></td></tr></tbody></table></code></div>    </div>
 
-    <p>__CFDoExternRefOperation 按照retainCount/retain/release 调用不同的函数
- alloc通过多个散列表来管理引用计数,对每个引用计数表的访问都需要配合spinlock.
+    <p>__CFDoExternRefOperation 按照retainCount/retain/release 调用不同的函数.
+  alloc通过多个散列表来管理引用计数,对每个引用计数表的访问都需要配合spinlock.
  <code class="language-plaintext highlighter-rouge">CFBasicHashRef table = __NSRetainCounters[idx].table;</code> 从该行代码看,APPLE是通过多个散列表来管理引用计数,每个NSRetainCounters结构体里有spinlock和table,执行引用计数操作时是线程安全的.</p>
   </li>
   <li>
@@ -763,19 +813,19 @@ A:retain方法会抛出异常</p>
 
     
       
-        <a href="https://twitter.com/intent/tweet?text=NSObject alloc实现 - L.KK&url=https://thsgood20.github.io/posts/alloc%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top"
+        <a href="https://twitter.com/intent/tweet?text=NSObject alloc实现 - LKK&url=https://thsgood20.github.io/posts/alloc%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top"
           title="Twitter" target="_blank" rel="noopener" aria-label="Twitter">
           <i class="fa-fw fab fa-twitter"></i>
         </a>
     
       
-        <a href="https://www.facebook.com/sharer/sharer.php?title=NSObject alloc实现 - L.KK&u=https://thsgood20.github.io/posts/alloc%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top"
+        <a href="https://www.facebook.com/sharer/sharer.php?title=NSObject alloc实现 - LKK&u=https://thsgood20.github.io/posts/alloc%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top"
           title="Facebook" target="_blank" rel="noopener" aria-label="Facebook">
           <i class="fa-fw fab fa-facebook-square"></i>
         </a>
     
       
-        <a href="https://telegram.me/share?text=NSObject alloc实现 - L.KK&url=https://thsgood20.github.io/posts/alloc%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top"
+        <a href="https://telegram.me/share?text=NSObject alloc实现 - LKK&url=https://thsgood20.github.io/posts/alloc%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top"
           title="Telegram" target="_blank" rel="noopener" aria-label="Telegram">
           <i class="fa-fw fab fa-telegram"></i>
         </a>
@@ -827,6 +877,22 @@ A:retain方法会抛出异常</p>
 
 
 
+
+  
+
+    <div id="access-lastmod" class="post">
+      <span>Recent Update</span>
+      <ul class="post-content pl-0 pb-1 ml-1 mt-2">
+
+      
+        
+        
+        
+        <li><a href="/posts/alloc%E5%AE%9E%E7%8E%B0/">NSObject alloc实现</a></li>
+      
+
+      </ul>
+    </div> <!-- #access-lastmod -->
 
   
 
@@ -962,7 +1028,7 @@ A:retain方法会抛出异常</p>
     <div class="footer-left">
       <p class="mb-0">
         © 2021
-        <a href="https://twitter.com/username">your_full_name</a>.
+        <a href="https://twitter.com/username">LKK</a>.
         
         <span data-toggle="tooltip" data-placement="top"
           title="Except where otherwise noted, the blog posts on this site are licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) License by the author.">Some rights reserved.</span>

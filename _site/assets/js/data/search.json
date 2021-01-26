@@ -12,7 +12,7 @@
 
 
 
-    "snippet": "有两种alloc实现      GNUstep(Cocoa互换框架 )    NSZone是为了防止内存碎片化而引入的结构,通过使用对象的目的,对象大小分配内存,提高效率.苹果官方文档说明, 现在的运行时系统内存管理已极具效率,使用NSZone反而效率低下源码复杂.    alloc简化版,引用计数信息写入对象内存头部    struct obj_layout{NSUinteger retained;};+(id)alloc{int size = sizeof(stuct obj_layout)+对象大小struct obj_layout *p = (struct obj_layout*..."
+    "snippet": "有两种alloc实现      GNUstep(Cocoa互换框架 )    NSZone是为了防止内存碎片化而引入的结构,通过使用对象的目的,对象大小分配内存,提高效率.苹果官方文档说明, 现在的运行时系统内存管理已极具效率,使用NSZone反而效率低下源码复杂.    alloc简化版,引用计数信息写入对象内存头部     struct obj_layout{     NSUinteger retained; }; +(id)alloc{     int size = sizeof(stuct obj_layout)+对象大小     struct obj_layout *p = (..."
   }
   
 ]
