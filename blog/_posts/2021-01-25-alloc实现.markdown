@@ -1,0 +1,85 @@
+---
+layout: post
+title:  "NSObject alloc实现"
+date:   2021-01-25 20:45:45 +0800
+categories: IOS
+---
+
+有两种alloc实现
+
+1.  GNUstep(Cocoa互换框架 )
+
+    NSZone是为了防止内存碎片化而引入的结构,通过使用对象的目的,对象大小分配内存,提高效率.苹果官方文档说明, 现在的运行时系统内存管理已极具效率,使用NSZone反而效率低下源码复杂.
+
+    alloc简化版,引用计数信息写入对象内存头部
+
+	```c
+struct obj_layout{
+	NSUinteger retained;
+};
++(id)alloc{
+	int size = sizeof(stuct obj_layout)+对象大小
+	struct obj_layout *p = (struct obj_layout*) calloc(1,size);
+	return(id)(p+1);
+}
+-(void)release{
+	if(decrementeExtraRefCountWasZero(self))
+		[self dealloc];
+}
+-(void)dealloc{
+	struct obj_layout *p = & ((struct obj_layout *)self)[-1];
+	free(p);
+}
+	```
+Q:当retained变量超出最大值时会发生什么? 
+A:retain方法会抛出异常
+
+2. Apple实现
+
+	```c
+  static struct {
+    CFSpinLock_t lock;
+    CFBasicHashRef table;
+    uint8_t padding[64 - sizeof(CFBasicHashRef) - sizeof(CFSpinLock_t)];
+} __NSRetainCounters[NUM_EXTERN_TABLES];
+CF_EXPORT uintptr_t __CFDoExternRefOperation(uintptr_t op, id obj) {
+    if (nil == obj) HALT;
+    uintptr_t idx = EXTERN_TABLE_IDX(obj);
+    uintptr_t disguised = DISGUISE(obj);
+    CFSpinLock_t *lock = &__NSRetainCounters[idx].lock;
+    CFBasicHashRef table = __NSRetainCounters[idx].table;
+    uintptr_t count;
+    switch (op) {
+    case 300:   // increment
+    case 350:   // increment, no event
+        __CFSpinLock(lock);
+	CFBasicHashAddValue(table, disguised, disguised);
+        __CFSpinUnlock(lock);
+        if (__CFOASafe && op != 350) __CFRecordAllocationEvent(__kCFObjectRetainedEvent, obj, 0, 0, NULL);
+        return (uintptr_t)obj;
+    case 400:   // decrement
+        if (__CFOASafe) __CFRecordAllocationEvent(__kCFObjectReleasedEvent, obj, 0, 0, NULL);
+    case 450:   // decrement, no event
+        __CFSpinLock(lock);
+        count = (uintptr_t)CFBasicHashRemoveValue(table, disguised);
+        __CFSpinUnlock(lock);
+        return 0 == count;
+    case 500:
+        __CFSpinLock(lock);
+        count = (uintptr_t)CFBasicHashGetCountOfKey(table, disguised);
+        __CFSpinUnlock(lock);
+        return count;
+    }
+    return 0;
+}
+```
+
+	__CFDoExternRefOperation 按照retainCount/retain/release 调用不同的函数
+	alloc通过多个散列表来管理引用计数,对每个引用计数表的访问都需要配合spinlock.
+	`CFBasicHashRef table = __NSRetainCounters[idx].table;` 从该行代码看,APPLE是通过多个散列表来管理引用计数,每个NSRetainCounters结构体里有spinlock和table,执行引用计数操作时是线程安全的.
+
+3. 两种实现对比
+
+	GNUstep实现简单高效,代码少, 内存块需考虑头部(指针地址偏移);
+	苹果的实现较为复杂通过引用计数表查到内存块. 
+	苹果实现好处是:方便调试,即使对象内存块损坏, 只要引用计数表没有被破话, 就能够确认内存块位置; ***在检测内存泄漏时,有助于检测各对象的持有者是否存在.***
